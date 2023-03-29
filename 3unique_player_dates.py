@@ -44,6 +44,7 @@ unique_player_names = []
 player_name_list = []
 player_last_online_list = []
 player_join_date_list = []
+scraping_datetime = []
 
 # Get text of the xpath
 def get_element_text(element, xpath):
@@ -59,8 +60,9 @@ def export_to_csv():
     df = pd.DataFrame(
         {
             "Player name": player_name_list,
-            "Last Online": player_last_online_list,
             "Joined": player_join_date_list,
+            "Last Online": player_last_online_list,
+            "Scraping DateTime": scraping_datetime,
         }
     )
     df.to_csv("unique_player_dates.csv", index=False)
@@ -84,6 +86,9 @@ for name in unique_player_names:
     # get last online date
     last_online_date = get_element_text(driver, last_online_xpath)
     player_last_online_list.append(last_online_date)
+    scraping_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # Added new line to record the scraping date and time
+    scraping_datetime.append(scraping_time)  # Added new line to append the scraping date and time to the list
+
     print(f"\n{name_count}")
     print(name)
     print(last_online_date)
@@ -94,7 +99,7 @@ for name in unique_player_names:
     print(join_date)
 
     name_count += 1
-    # export to csv each time so that work can be resumed from that point in case that the process crashes midway
+    # export to csv file each time so that work can be resumed from the point that the process crashes midway
     export_to_csv()
     sleep(5)
 
