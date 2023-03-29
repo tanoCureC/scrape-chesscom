@@ -45,7 +45,6 @@ leaderboards = [
     ("blitz", "https://www.chess.com/leaderboard/live?country=JP&page=1"),
     ("bullet", "https://www.chess.com/leaderboard/live/bullet?country=JP&page=1"),
     ("rapid", "https://www.chess.com/leaderboard/live/rapid?country=JP&page=1"),
-    ("rapid", "https://www.chess.com/leaderboard/live/rapid?country=JP&page=1"),
     ("960live", "https://www.chess.com/leaderboard/live/blitz/chess960?country=JP&page=1"),
     ("960daily", "https://www.chess.com/leaderboard/daily/chess960?country=JP&page=1"),
     ("daily", "https://www.chess.com/leaderboard/daily?country=JP&page=1"),
