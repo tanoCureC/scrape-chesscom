@@ -31,13 +31,6 @@ service = Service(executable_path=ChromeDriverManager().install())  # linux only
 driver = webdriver.Chrome(service=service, options=chrome_options)  # linux only
 # driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options) # Windows only
 
-# # start page
-# website_url = "https://www.chess.com/leaderboard/live?country=JP&page=1"
-# current_page = 1
-
-# driver.get(website_url)
-# driver.set_window_position(0, 0)
-# driver.set_window_size(1440, 900)
 ignored_exceptions = (NSEE, StaleElementReferenceException)
 
 # xPaths
@@ -52,9 +45,13 @@ leaderboards = [
     ("blitz", "https://www.chess.com/leaderboard/live?country=JP&page=1"),
     ("bullet", "https://www.chess.com/leaderboard/live/bullet?country=JP&page=1"),
     ("rapid", "https://www.chess.com/leaderboard/live/rapid?country=JP&page=1"),
+    ("rapid", "https://www.chess.com/leaderboard/live/rapid?country=JP&page=1"),
+    ("960live", "https://www.chess.com/leaderboard/live/blitz/chess960?country=JP&page=1"),
+    ("960daily", "https://www.chess.com/leaderboard/daily/chess960?country=JP&page=1"),
+    ("daily", "https://www.chess.com/leaderboard/daily?country=JP&page=1"),
 ]
 
- # variables
+# variables
 player_name_list = []
 player_rating_list = []
 player_win_list = []
@@ -75,7 +72,7 @@ def get_player_data_from_page():
     retry = True
     while retry:
         try:
-            player_data = WebDriverWait(driver, 10, ignored_exceptions=ignored_exceptions).until(EC.presence_of_all_elements_located((By.XPATH, player_data_xpath)))
+            player_data = WebDriverWait(driver, 20, ignored_exceptions=ignored_exceptions).until(EC.presence_of_all_elements_located((By.XPATH, player_data_xpath)))
             retry = False
         except TimeoutException:
             print("Timed out waiting for player data to load")
@@ -122,7 +119,7 @@ def check_next_page(current_page):
         return False
     ############################
     try:
-        next_page = WebDriverWait(driver, 10, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, next_page_button_xpath)))
+        next_page = WebDriverWait(driver, 20, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, next_page_button_xpath)))
         if next_page.is_enabled():
             return True
         else:
@@ -169,30 +166,17 @@ def export_to_csv(leaderboard_type):
     )
     df.to_csv(filename, index=False)
     print(df)
-    del df # dfを空にする
 
+# MAIN PROCESS
 def scrape_leaderboard(leaderboard_type, website_url):
-#     global current_page
-#     global player_name_list
-#     global player_rating_list
-#     global player_win_list
-#     global player_draw_list
-#     global player_loss_list
-    
     current_page = 1
-
-    player_name_list = []
-    player_rating_list = []
-    player_win_list = []
-    player_draw_list = []
-    player_loss_list = []
-
+    
     driver.get(website_url)
     driver.set_window_position(0, 0)
     driver.set_window_size(1440, 900)
     ignored_exceptions = (NSEE, StaleElementReferenceException)
-        
-    #close ready-to-play-banner (preparation before staring main process)
+    
+    #close ready-to-play-banner (preparation before starting main process)
     try:
         element_present = EC.presence_of_element_located((By.XPATH, banner_close_xpath))
         WebDriverWait(driver, 10).until(element_present)
@@ -201,7 +185,7 @@ def scrape_leaderboard(leaderboard_type, website_url):
     except TimeoutException:
         pass
     
-    # Main process
+    # main process
     continue_scraping = True
     while continue_scraping:
         # Get player list from the current page
@@ -218,8 +202,15 @@ def scrape_leaderboard(leaderboard_type, website_url):
 
     export_to_csv(leaderboard_type)
     
-# MAIN PROCESS
+# Transition from Blitz -> Bullet -> ...Leaderboard : Run the MAIN PROCESS, scrape_leaderboard(), in each Leaderboard
 for leaderboard_type, website_url in leaderboards:
+    # reset lists before moving to the next leaderboard
+    player_name_list.clear()
+    player_rating_list.clear()
+    player_win_list.clear()
+    player_draw_list.clear()
+    player_loss_list.clear()
+    
     scrape_leaderboard(leaderboard_type, website_url)
 
 driver.quit()

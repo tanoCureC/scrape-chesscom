@@ -66,6 +66,7 @@ def export_to_csv():
     df.to_csv("unique_player_dates.csv", index=False)
     #print(df)
 
+## MAIN PROCESS
 # Import the CSV file of unique player names
 unique_players = pd.read_csv('unique_player_names.csv')
 unique_player_names = unique_players['Player name']
@@ -93,6 +94,7 @@ for name in unique_player_names:
     print(join_date)
 
     name_count += 1
+    # export to csv each time so that work can be resumed from that point in case that the process crashes midway
     export_to_csv()
     sleep(5)
 
