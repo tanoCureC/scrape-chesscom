@@ -45,7 +45,7 @@ unique_player_names = []
 player_name_list = []
 player_join_date_list = []
 player_last_online_list = []
-scraping_datetime = []
+scraping_time_list = []
 last_online_date_list_pdt = []
 
 # Get text of the xpath
@@ -57,20 +57,7 @@ def get_element_text(element, xpath):
         print(f"Timed out waiting for element with xpath {xpath} to load")
         return None
 
-# Export to csv file
-def export_to_csv():
-    df = pd.DataFrame(
-        {
-            "Player name": player_name_list,
-            "Joined": player_join_date_list,
-            "Last Online": player_last_online_list,
-            "Scraping DateTime NZST": scraping_datetime,
-            "Last Online PDT": last_online_date_list_pdt,
-        }
-    )
-    df.to_csv("unique_player_dates.csv", index=False)
-    #print(df)
-
+# calculate and convert Last Online date/time in PDT
 def calculate_last_online_datetime(last_online_date, scraping_time):
     # Convert scraping_time to a datetime object with timezone information (NZST GMT+13 hours)
     scraping_dt = datetime.strptime(scraping_time, '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone(timedelta(hours=13)))
@@ -93,8 +80,22 @@ def calculate_last_online_datetime(last_online_date, scraping_time):
 
     return last_online_datetime
 
+# Export to csv file
+def export_to_csv():
+    df = pd.DataFrame(
+        {
+            "Player name": player_name_list,
+            "Joined": player_join_date_list,
+            "Last Online": player_last_online_list,
+            "Scraping DateTime NZST": scraping_time_list,
+            "Last Online PDT": last_online_date_list_pdt,
+        }
+    )
+    df.to_csv("unique_player_dates.csv", index=False)
+    #print(df)
+
 ## MAIN PROCESS
-# Import the CSV file of unique player names
+# Import csv file of unique player names
 unique_players = pd.read_csv('unique_player_names.csv')
 unique_player_names = unique_players['Player name']
 
@@ -120,7 +121,7 @@ for name in unique_player_names:
     
     # get scraping time
     scraping_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
-    scraping_datetime.append(scraping_time)
+    scraping_time_list.append(scraping_time)
     
     # calculate last_online_date to PDT
     last_online_date_pdt = calculate_last_online_datetime(last_online_date, scraping_time)
@@ -141,4 +142,3 @@ for name in unique_player_names:
     sleep(5)
 
 driver.quit()
-print('end')

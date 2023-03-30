@@ -61,13 +61,12 @@ Chess.comに公開されている情報の内、日章旗属性のプレーヤ�
 
 * .gitignore に*.csvを含めておりません<br>
 成果物がcsvファイルですので、皆様と共有する目的で、敢えて下記のcsvファイルを.gitignoreに含めておりません。その他にも多くのcsvファイルがコードによって生成されますが、それらは.gitignoreに含めております。csvファイルはスクレイピングでコードが使用するものではありませんので、スクレイピングを実行する上では不要です。全て削除していただいて全く問題ありません。<br>
-<br>
-blitz_leaderboard_dates.csv<br>
-bullet_leaderboard_dates.csv<br>
-rapid_leaderboard_dates.csv<br>
-960live_leaderboard_dates.csv<br>
-960daily_leaderboard_dates.csv<br>
-daily_leaderboard_dates.csv<br>
+  * blitz_leaderboard_dates.csv
+  * bullet_leaderboard_dates.csv
+  * rapid_leaderboard_dates.csv
+  * 960live_leaderboard_dates.csv
+  * 960daily_leaderboard_dates.csv
+  * daily_leaderboard_dates.csv
 
 <br>
 
