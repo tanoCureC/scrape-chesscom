@@ -43,9 +43,14 @@ Chess.comに公開されている情報の内、日章旗属性のプレーヤ�
 
 * Google Chromeがインストール済みであることが必要です<br>
 * python 標準ライブラリ以外に使用したのは下記となります。<br>
-  * selenium
-  * webdriver_manager
-  * pandas
+  * スクレイピング用
+    * selenium
+    * webdriver_manager
+    * pandas
+  * 作図用
+    * matplotlib
+    * matplotlib-venn
+    * seaborn
 
 <br>
 
