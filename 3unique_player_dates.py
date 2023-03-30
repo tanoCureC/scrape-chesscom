@@ -12,10 +12,11 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
     TimeoutException,
 )
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from time import sleep
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
+import re
 
 chrome_options = Options()
 chrome_options.add_argument("--disable-extensions")
@@ -42,14 +43,15 @@ join_date_xpath = '//*[@id="view-profile"]/div[1]/div/div[1]/div[2]/div/div[2]/d
 # variables
 unique_player_names = []
 player_name_list = []
-player_last_online_list = []
 player_join_date_list = []
+player_last_online_list = []
 scraping_datetime = []
+last_online_date_list_pdt = []
 
 # Get text of the xpath
 def get_element_text(element, xpath):
     try:
-        elem = WebDriverWait(element, 20, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, xpath)))
+        elem = WebDriverWait(element, 10, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, xpath)))
         return elem.text
     except TimeoutException:
         print(f"Timed out waiting for element with xpath {xpath} to load")
@@ -62,11 +64,34 @@ def export_to_csv():
             "Player name": player_name_list,
             "Joined": player_join_date_list,
             "Last Online": player_last_online_list,
-            "Scraping DateTime": scraping_datetime,
+            "Scraping DateTime NZST": scraping_datetime,
+            "Last Online PDT": last_online_date_list_pdt,
         }
     )
     df.to_csv("unique_player_dates.csv", index=False)
     #print(df)
+
+def calculate_last_online_datetime(last_online_date, scraping_time):
+    # Convert scraping_time to a datetime object with timezone information (NZST GMT+13 hours)
+    scraping_dt = datetime.strptime(scraping_time, '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone(timedelta(hours=13)))
+    
+    # Convert scraping_time (NZST) to PDT (GMT-7 hours)
+    scraping_dt_pdt = scraping_dt.astimezone(timezone(timedelta(hours=-7)))
+
+    if last_online_date == 'Just now' or last_online_date == 'Online Now':
+        last_online_datetime = scraping_dt_pdt
+    elif ' ago' in last_online_date:
+        num = int(re.search(r'\d+', last_online_date).group()) # first appearing consecutive numbers in the string
+        if 'minute' in last_online_date:
+            last_online_datetime = scraping_dt_pdt - timedelta(minutes=num)
+        elif 'hour' in last_online_date:
+            last_online_datetime = scraping_dt_pdt - timedelta(hours=num)
+        elif 'day' in last_online_date:
+            last_online_datetime = scraping_dt_pdt - timedelta(days=num)
+    else:
+        last_online_datetime = datetime.strptime(last_online_date, '%b %d, %Y').replace(tzinfo=timezone(timedelta(hours=-7)))
+
+    return last_online_datetime
 
 ## MAIN PROCESS
 # Import the CSV file of unique player names
@@ -76,29 +101,41 @@ unique_player_names = unique_players['Player name']
 # Get Join date and Last online date from profile page of each player
 name_count = 1
 for name in unique_player_names:
-    # in order to export to csv each time, need to match the length of name list with the lengths of last online date list and join date list
-    player_name_list.append(name)
-    
     # get driver object of profile page
     profile_url = "https://www.chess.com/members/" + name
     driver.get(profile_url)
 
     # get last online date
     last_online_date = get_element_text(driver, last_online_xpath)
+    if last_online_date == None:
+        continue
+    
+    # get join date
+    join_date = get_element_text(driver, join_date_xpath)
+    if join_date == None:
+        continue
+    
     player_last_online_list.append(last_online_date)
-    scraping_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # Added new line to record the scraping date and time
-    scraping_datetime.append(scraping_time)  # Added new line to append the scraping date and time to the list
+    player_join_date_list.append(join_date)
+    
+    # get scraping time
+    scraping_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
+    scraping_datetime.append(scraping_time)
+    
+    # calculate last_online_date to PDT
+    last_online_date_pdt = calculate_last_online_datetime(last_online_date, scraping_time)
+    last_online_date_list_pdt.append(last_online_date_pdt.strftime('%Y-%m-%d %H:%M:%S'))
 
     print(f"\n{name_count}")
     print(name)
     print(last_online_date)
-
-    # get join date
-    join_date = get_element_text(driver, join_date_xpath)
-    player_join_date_list.append(join_date)
     print(join_date)
-
+    print(scraping_time)
+    print(last_online_date_pdt)
+    
     name_count += 1
+    # in order to export to csv each time, need to match the length of name list with the lengths of last online date list and join date list
+    player_name_list.append(name)
     # export to csv file each time so that work can be resumed from the point that the process crashes midway
     export_to_csv()
     sleep(5)

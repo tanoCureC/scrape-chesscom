@@ -1,2 +1,10 @@
 .ipynb_checkpoints
 *.csv
+960daily_leaderboard.csv
+960live_leaderboard.csv
+blitz_leaderboard.csv
+bullet_leaderboard.csv
+daily_leaderboard.csv
+rapid_leaderboard.csv
+unique_player_dates.csv
+unique_player_names.csv
