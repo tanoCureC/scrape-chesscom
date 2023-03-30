@@ -97,10 +97,10 @@ def process_player_data(player_data, current_page, leaderboard_type):
 
         # get win/draw/loss
         stats = get_element_text(player, stats_xpath)
-        stats = "".join(stats.split())
+        stats = "".join(stats.split()) # remove unnecessary spaces
         stats_list_formatted = stats.split("/")
         if len(stats_list_formatted) != 3:
-            print(f"Skipping player {name} because of invalid stats")
+            print(f"Skipping player {name} because of invalid stats = {stats}")
             player_win_list.append(None)
             player_draw_list.append(None)
             player_loss_list.append(None)
@@ -136,9 +136,9 @@ def check_next_page(current_page):
 
 # Move to next page
 def click_next_page(current_page):
+    sleep(5)
     try:
         next_page = WebDriverWait(driver, 10, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, next_page_button_xpath)))
-        sleep(5)
         next_page.click()
         current_page += 1
     except (NSEE, WebDriverException):
@@ -164,7 +164,7 @@ def export_to_csv(leaderboard_type):
         }
     )
     df.to_csv(filename, index=False)
-    print(df)
+    #print(df) # testing purpose only
 
 # MAIN PROCESS
 def scrape_leaderboard(leaderboard_type, website_url):
