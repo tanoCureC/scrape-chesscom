@@ -115,7 +115,7 @@ def process_player_data(player_data, current_page, leaderboard_type):
             player_win_list.append(stats_list_formatted[0])
             player_draw_list.append(stats_list_formatted[1])
             player_loss_list.append(stats_list_formatted[2])
-            print(f"{stats_list_formatted[0]}/{stats_list_formatted[1]}/{stats_list_formatted[2]}")
+            #print(f"{stats_list_formatted[0]}/{stats_list_formatted[1]}/{stats_list_formatted[2]}")
 
         return True
         
@@ -130,14 +130,14 @@ def check_next_page(current_page):
     #    return False
     ############################
     try:
-        next_page = WebDriverWait(driver, 20, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, next_page_button_xpath)))
+        next_page = WebDriverWait(driver, 10, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, next_page_button_xpath)))
         if next_page.is_enabled():
             return True
         else:
             print("end")
             return False
     except (NSEE, WebDriverException):
-        print("\nfail to click on next page due to error\n")
+        print("\nfail to find next page button\n")
         try:
             # close ready to play banner
             ready_close = driver.find_element(By.XPATH, banner_close_xpath)
@@ -148,13 +148,13 @@ def check_next_page(current_page):
 
 # Move to next page
 def click_next_page(current_page):
-    sleep(5)
+    sleep(1)
     try:
         next_page = WebDriverWait(driver, 10, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, next_page_button_xpath)))
         next_page.click()
         current_page += 1
     except (NSEE, WebDriverException):
-        print("\nfail to click on next page due to error\n")
+        print("\nfail to click next page button\n")
         try:
             # close ready to play banner
             ready_close = driver.find_element(By.XPATH, banner_close_xpath)
@@ -204,13 +204,15 @@ def scrape_leaderboard(leaderboard_type, website_url):
 
         # Get data of each player on the current page
         continue_scraping = process_player_data(player_data, current_page, leaderboard_type)
-        export_to_csv(leaderboard_type)
+        #export_to_csv(leaderboard_type) # have given up the idea to export to csv per page because leaderboard is updated frequently and pointless to do so
 
         # Check if there is a next page
-        continue_scraping = check_next_page(current_page)
+        if continue_scraping:
+            continue_scraping = check_next_page(current_page)
 
         # Move to next page
-        current_page = click_next_page(current_page)
+        if continue_scraping:
+            current_page = click_next_page(current_page)
 
     export_to_csv(leaderboard_type)
     
