@@ -86,36 +86,42 @@ def get_player_data_from_page():
 
 # Get data of each player on the current page
 def process_player_data(player_data, current_page, leaderboard_type):
-    for player in player_data:
-        # get player name
-        name = get_element_text(player, player_name_xpath)
-        player_name_list.append(name)
-        if player is not None:
-            print(f"\n{leaderboard_type} page {current_page}")
-            print(name)
-        else:
-            continue
+    if player_data is not None:
+        for player in player_data:
+            # get player name
+            name = get_element_text(player, player_name_xpath)
+            player_name_list.append(name)
+            if player is not None:
+                print(f"\n{leaderboard_type} page {current_page}")
+                print(name)
+            else:
+                continue
 
-        # get rating
-        rating = get_element_text(player, rating_xpath)
-        player_rating_list.append(rating)
-        print(rating)
+            # get rating
+            rating = get_element_text(player, rating_xpath)
+            player_rating_list.append(rating)
+            print(rating)
 
-        # get win/draw/loss
-        stats = get_element_text(player, stats_xpath)
-        stats = "".join(stats.split()) # remove unnecessary spaces
-        stats_list_formatted = stats.split("/")
-        if len(stats_list_formatted) != 3:
-            print(f"Skipping player {name} because of invalid stats = {stats}")
-            player_win_list.append(None)
-            player_draw_list.append(None)
-            player_loss_list.append(None)
-            continue
-        player_win_list.append(stats_list_formatted[0])
-        player_draw_list.append(stats_list_formatted[1])
-        player_loss_list.append(stats_list_formatted[2])
-        print(f"{stats_list_formatted[0]}/{stats_list_formatted[1]}/{stats_list_formatted[2]}")
+            # get win/draw/loss
+            stats = get_element_text(player, stats_xpath)
+            stats = "".join(stats.split()) # remove unnecessary spaces
+            stats_list_formatted = stats.split("/")
+            if len(stats_list_formatted) != 3:
+                print(f"Skipping player {name} because of invalid stats = {stats}")
+                player_win_list.append(None)
+                player_draw_list.append(None)
+                player_loss_list.append(None)
+                continue
+            player_win_list.append(stats_list_formatted[0])
+            player_draw_list.append(stats_list_formatted[1])
+            player_loss_list.append(stats_list_formatted[2])
+            print(f"{stats_list_formatted[0]}/{stats_list_formatted[1]}/{stats_list_formatted[2]}")
 
+        return True
+        
+    else:
+        return False
+            
 # Check if there is a next page
 def check_next_page(current_page):
     ### for testing purpose only
@@ -197,7 +203,8 @@ def scrape_leaderboard(leaderboard_type, website_url):
         player_data = get_player_data_from_page()
 
         # Get data of each player on the current page
-        process_player_data(player_data, current_page, leaderboard_type)
+        continue_scraping = process_player_data(player_data, current_page, leaderboard_type)
+        export_to_csv(leaderboard_type)
 
         # Check if there is a next page
         continue_scraping = check_next_page(current_page)
