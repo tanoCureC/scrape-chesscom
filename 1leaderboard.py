@@ -67,13 +67,21 @@ def get_element_text(element, xpath):
 # Get player list on the current page
 def get_player_data_from_page():
     retry = True
-    while retry:
+    max_retries = 5
+    attempts = 0
+    player_data = None
+    while retry and attempts < max_retries:
         try:
-            player_data = WebDriverWait(driver, 20, ignored_exceptions=ignored_exceptions).until(EC.presence_of_all_elements_located((By.XPATH, player_data_xpath)))
+            player_data = WebDriverWait(driver, 10, ignored_exceptions=ignored_exceptions).until(EC.presence_of_all_elements_located((By.XPATH, player_data_xpath)))
             retry = False
         except TimeoutException:
             print("Timed out waiting for player data to load")
             driver.refresh()
+            attempts += 1
+
+    if attempts == max_retries:
+        print("Reached maximum retries. Exiting.")
+        
     return player_data
 
 # Get data of each player on the current page
