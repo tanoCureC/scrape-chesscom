@@ -33,7 +33,6 @@ driver = webdriver.Chrome(service=service, options=chrome_options)  # linux only
 
 ignored_exceptions = (NSEE, StaleElementReferenceException)
 
-# xPaths
 banner_close_xpath = '//button[@class="ready-to-play-banner-close"]'
 player_data_xpath = '//tr[@class="leaderboard-row-show-on-hover"]'
 player_name_xpath = './td[@class="leaderboard-row-user-cell"]/a/div/a[@data-test-element="user-tagline-username"]'
@@ -50,7 +49,6 @@ leaderboards = [
     ("daily", "https://www.chess.com/leaderboard/daily?country=JP&page=1"),
 ]
 
-# variables
 player_name_list = []
 player_rating_list = []
 player_win_list = []
@@ -113,9 +111,9 @@ def process_player_data(player_data, current_page, leaderboard_type):
 # Check if there is a next page
 def check_next_page(current_page):
     ### for testing purpose only
-    if current_page == 2:
-        print("test end")
-        return False
+    #if current_page == 2:
+    #    print("test end")
+    #    return False
     ############################
     try:
         next_page = WebDriverWait(driver, 20, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, next_page_button_xpath)))
@@ -164,7 +162,7 @@ def export_to_csv(leaderboard_type):
         }
     )
     df.to_csv(filename, index=False)
-    #print(df) # testing purpose only
+    print(df)
 
 # MAIN PROCESS
 def scrape_leaderboard(leaderboard_type, website_url):
