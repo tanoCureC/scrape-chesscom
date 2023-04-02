@@ -67,13 +67,16 @@ def calculate_last_online_datetime(last_online_date, scraping_time):
     # Convert datetime object of scraping_time to datetime object of chess.com server time
     scraping_dt_chess_com_server = scraping_dt.astimezone(chesscom_timezone)
 
+    # Set a default value for last_online_datetime
+    last_online_datetime = scraping_dt_chess_com_server
+    
     if last_online_date == 'Just now' or last_online_date == 'Online Now':
         last_online_datetime = scraping_dt_chess_com_server
     elif ' ago' in last_online_date:
         num = int(re.search(r'\d+', last_online_date).group()) # first appearing consecutive numbers in the string
-        if 'minute' in last_online_date:
+        if 'minute' in last_online_date or 'min' in last_online_date:
             last_online_datetime = scraping_dt_chess_com_server - timedelta(minutes=num)
-        elif 'hour' in last_online_date:
+        elif 'hour' in last_online_date or 'hr' in last_online_date:
             last_online_datetime = scraping_dt_chess_com_server - timedelta(hours=num)
         elif 'day' in last_online_date:
             last_online_datetime = scraping_dt_chess_com_server - timedelta(days=num)
