@@ -200,7 +200,7 @@ def scrape_leaderboard(leaderboard_type, website_url):
     # main process
 #    continue_scraping = True
 #    while continue_scraping:
-    while current_page < 2612:
+    while current_page < 708:
         # Get player list from the current page
         player_data = get_player_data_from_page()
 
