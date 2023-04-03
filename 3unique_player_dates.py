@@ -74,7 +74,7 @@ def calculate_last_online_datetime(last_online_date, scraping_time):
         last_online_datetime = scraping_dt_chess_com_server
     elif ' ago' in last_online_date:
         num = int(re.search(r'\d+', last_online_date).group()) # first appearing consecutive numbers in the string
-        if 'minute' in last_online_date or 'min' in last_online_date:
+        if 'min' in last_online_date:
             last_online_datetime = scraping_dt_chess_com_server - timedelta(minutes=num)
         elif 'hour' in last_online_date or 'hr' in last_online_date:
             last_online_datetime = scraping_dt_chess_com_server - timedelta(hours=num)
