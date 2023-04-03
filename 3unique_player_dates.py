@@ -53,7 +53,7 @@ chesscom_timezone = pytz.timezone('America/Los_Angeles') # timezone of chess.com
 # Get text of the xpath
 def get_element_text(element, xpath):
     try:
-        elem = WebDriverWait(element, 10, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, xpath)))
+        elem = WebDriverWait(element, 20, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, xpath)))
         return elem.text
     except TimeoutException:
         print(f"Timed out waiting for element with xpath {xpath} to load")
@@ -145,7 +145,7 @@ for name in unique_player_names:
     # export to csv file every 100 players so that work can be resumed from the nearest point that the process crashes midway
     if name_count % 100 == 0:
         export_to_csv()
-    sleep(5)
+    sleep(3)
 
 driver.quit()
 export_to_csv()
