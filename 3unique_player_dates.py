@@ -67,7 +67,7 @@ def calculate_last_online_datetime(last_online_date, scraping_time):
     # Convert datetime object of scraping_time to datetime object of chess.com server time
     scraping_dt_chess_com_server = scraping_dt.astimezone(chesscom_timezone)
 
-    # Set a default value for last_online_datetime
+    # Set a default value for last_online_datetime in case the following if and elif conditions are not met.
     last_online_datetime = scraping_dt_chess_com_server
     
     if last_online_date == 'Just now' or last_online_date == 'Online Now':
@@ -145,7 +145,7 @@ for name in unique_player_names:
     # export to csv file every 100 players so that work can be resumed from the nearest point that the process crashes midway
     if name_count % 100 == 0:
         export_to_csv()
-    sleep(3)
+    sleep(5)
 
 driver.quit()
 export_to_csv()

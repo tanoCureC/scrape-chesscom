@@ -181,14 +181,17 @@ def export_to_csv(leaderboard_type):
 
 # MAIN PROCESS
 def scrape_leaderboard(leaderboard_type, website_url):
-    current_page = 1
+    ##############################################################################################################################
+    # check the last page number on your browser and input it here.  This code scrapes data from the last page to the first page.#
+    ##############################################################################################################################
+    current_page = 100
     
     driver.get(website_url)
     driver.set_window_position(0, 0)
     driver.set_window_size(1440, 900)
     ignored_exceptions = (NSEE, StaleElementReferenceException)
     
-    #close ready-to-play-banner (preparation before starting main process)
+    # close ready-to-play-banner (preparation before starting main process)
     try:
         element_present = EC.presence_of_element_located((By.XPATH, banner_close_xpath))
         WebDriverWait(driver, 10).until(element_present)
@@ -200,7 +203,12 @@ def scrape_leaderboard(leaderboard_type, website_url):
     # main process
 #    continue_scraping = True
 #    while continue_scraping:
-    while current_page < 708:
+    while current_page > 0:
+
+        website_url = website_url + "&page=" + str(current_page)
+        driver.get(website_url)
+        print(current_page)
+        
         # Get player list from the current page
         player_data = get_player_data_from_page()
 
@@ -209,11 +217,7 @@ def scrape_leaderboard(leaderboard_type, website_url):
         process_player_data(player_data, current_page, leaderboard_type)        
         #export_to_csv(leaderboard_type) # have given up the idea to export to csv per page because leaderboard is updated frequently and pointless to do so
 
-        # move to next page
-        current_page += 1
-        website_url = website_url + "&page=" + str(current_page)
-        driver.get(website_url)
-        print(current_page)
+        current_page -= 1
         
         # Check if there is a next page
 #        if continue_scraping:

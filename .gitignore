@@ -2,7 +2,6 @@
 test/
 daily_leaderboard/*
 !daily_leaderboard/daily_leaderboard.py
-*.csv
 960daily_leaderboard.csv
 960live_leaderboard.csv
 blitz_leaderboard.csv
