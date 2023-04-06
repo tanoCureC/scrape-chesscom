@@ -2,11 +2,12 @@
 test/
 daily_leaderboard/*
 !daily_leaderboard/daily_leaderboard.py
-#merge_player_dates_list/
-#*.csv
+merge_player_dates_list/
+*.csv
 !blitz_leaderboard_dates.csv
 !bullet_leaderboard_dates.csv
 !rapid_leaderboard_dates.csv
 !960live_leaderboard_dates.csv
 !960daily_leaderboard_dates.csv
 !daily_leaderboard_dates.csv
+!unique_player_dates.csv

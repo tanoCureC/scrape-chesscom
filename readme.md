@@ -1,5 +1,3 @@
-# UNDER CONSTRUCTION
-
 ## 何をするものか
 chess.comに公開されている情報の内、日章旗属性のプレーヤーについて、下記のデータをスクレイピングします。<br>
 * プレーヤー名
@@ -56,7 +54,8 @@ chess.comに公開されている情報の内、日章旗属性のプレーヤ�
   * rapid_leaderboard_dates.csv
   * 960live_leaderboard_dates.csv
   * 960daily_leaderboard_dates.csv
-  * daily_leaderboard_dates.csv<br>
+  * daily_leaderboard_dates.csv
+  * unique_player_dates.csv<br>
 <br>
 
 * 最後にログインした日<br>
@@ -73,12 +72,12 @@ chess.comに公開されている情報の内、日章旗属性のプレーヤ�
 尚、私の環境のDockerイメージは下記からプルできます。<br>
 **docker pull tanocurec/ubun_mini_jupy_chro_multi:20230406**<br>
 Dockerfileはこのgithubリポジトリに含めていますので中身を知りたいという方はご覧ください。
-中身はubuntu + miniconda + JupyterLab + Google Chrome + Chrome driverです。イメージサイズは1.32GB。スクレイピングとデータ可視化用に下記のライブラリを導入済みです。scheduleは今回のスクレイピングでは使用していませんが、同接数の定時スクレイピングのコードで使用します。numpyは使用しませんが、pandasを導入すると相互依存関係にあるため自動的に導入されるようです。当初はGoolge ChromeをDockerイメージに含め、Chrome driverはコード実行時にダウンロードするようにしておりましたが、そうするとdriverは最新のものがダウンロードされ、ブラウザとのバージョン違いで問題が発生したため、Chrome driverもDokerイメージに含めることにしました。<br>
+中身はubuntu + miniconda + JupyterLab + Google Chrome + Chrome driverです。イメージサイズは1.33GB。スクレイピングとデータ可視化用に下記のライブラリを導入済みです。scheduleは今回のスクレイピングでは使用していませんが、同接数の定時スクレイピングのコードで使用します。numpyは使用しませんが、pandasを導入すると相互依存関係にあるため自動的に導入されるようです。当初はGoolge ChromeをDockerイメージに含め、Chrome driverはコード実行時にダウンロードするようにしておりましたが、そうするとdriverは最新のものがダウンロードされ、ブラウザとのバージョン違いで問題が発生したため、Chrome driverもDokerイメージに含めることにしました。<br>
 
 * selenium
 * webdriver_manager
 * schedule
 * pandas & numpy
 * matplotlib
-* matplotlib-venn
+* matplotlib-venn & scipy
 * seaborn
