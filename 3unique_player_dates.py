@@ -29,12 +29,8 @@ chrome_options.add_argument("--headless")
 chrome_options.add_argument("--log-level=3")
 chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36")
 
-#service = Service(executable_path=ChromeDriverManager().install())  # linux only
-#driver = webdriver.Chrome(service=service, options=chrome_options)  # linux only
-# driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options) # Windows only
-
-path = '/work/python/github/scrape-chesscom/chromedriver'
-driver = webdriver.Chrome(executable_path=path, options=chrome_options)
+service = Service(executable_path='/usr/local/bin/chromedriver')
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 driver.set_window_position(0, 0)
 driver.set_window_size(1440, 900)
@@ -56,7 +52,7 @@ chesscom_timezone = pytz.timezone('America/Los_Angeles') # timezone of chess.com
 # Get text of the xpath
 def get_element_text(element, xpath):
     try:
-        elem = WebDriverWait(element, 20, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, xpath)))
+        elem = WebDriverWait(element, 10, ignored_exceptions=ignored_exceptions).until(EC.presence_of_element_located((By.XPATH, xpath)))
         return elem.text
     except TimeoutException:
         print(f"Timed out waiting for element with xpath {xpath} to load")

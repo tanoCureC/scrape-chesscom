@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  scraping:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ubun_mini_jupy_chro_multi
+    container_name: ubun_mini_jupy_chro_multi
+    ports:
+      - "8888:8888"
+    volumes:
+      - "/mnt/c/Users/yourUserID/Desktop:/work"
+    restart: on-failure

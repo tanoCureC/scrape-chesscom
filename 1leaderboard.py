@@ -27,9 +27,8 @@ chrome_options.add_argument("--headless")
 chrome_options.add_argument("--log-level=3")
 chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36")
 
-service = Service(executable_path=ChromeDriverManager().install())  # linux only
-driver = webdriver.Chrome(service=service, options=chrome_options)  # linux only
-# driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options) # Windows only
+service = Service(executable_path='/usr/local/bin/chromedriver')
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 ignored_exceptions = (NSEE, StaleElementReferenceException)
 
@@ -67,7 +66,7 @@ def get_element_text(element, xpath):
 # Get player list on the current page
 def get_player_data_from_page():
     retry = True
-    max_retries = 5
+    max_retries = 3
     attempts = 0
     player_data = None
     while retry and attempts < max_retries:
