@@ -43,7 +43,7 @@ chess.comに公開されている情報の内、日章旗属性のプレーヤ�
 
 * Windowsでは動作しません（多分）<br>
 これらのコードの作成と実行ははUbuntuベースのDockerコンテナ内で行いました。
-私はWindowsでpythonを動かす環境を既に削除しているため確認しておりませんが、**1leaderboard.py** 及び、**3unique_player_dates.py**内の以下のコードを変更すればWindowsで動作するかもしれません。2月にスクレイピングした時はWindows環境だったのですが、あれから大幅にコードを書き換えたので分からなくなりました。<br>
+私はWindowsでpythonを動かす環境を既に削除しているため確認しておりませんが、**1leaderboard.py** 及び、**3unique_player_dates.py**内の以下のコードを変更すればWindowsで動作するかもしれません。1月にスクレイピングした時はWindows環境だったのですが、あれから大幅にコードを書き換えたので分からなくなりました。<br>
   * 23行目 chrome_options .....no-sandbox の行をコメントアウト<br>
 <br>
 
