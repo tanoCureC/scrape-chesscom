@@ -1,8 +1,8 @@
 .ipynb_checkpoints
+*.png
 test/
 daily_leaderboard/*
 !daily_leaderboard/daily_leaderboard.py
-merge_player_dates_list/
 *.csv
 !blitz_leaderboard_dates.csv
 !bullet_leaderboard_dates.csv
