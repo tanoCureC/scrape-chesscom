@@ -1,6 +1,8 @@
 .ipynb_checkpoints
 *.png
 test/
+accounts_made_invalid_during_scraping/
+merge player_dates_lists/
 daily_leaderboard/*
 !daily_leaderboard/daily_leaderboard.py
 *.csv
